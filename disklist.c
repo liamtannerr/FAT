@@ -115,10 +115,8 @@ int main(int argc, char *argv[]) {
     uint16_t sectorsPerCluster = bootSector[13];
     uint16_t reservedSectors = getUInt16(bootSector, 14);
     uint8_t numFATs = bootSector[16];
-    uint16_t rootEntries = getUInt16(bootSector, 17);
-    uint16_t totalSectors = getUInt16(bootSector, 19);
     uint16_t sectorsPerFAT = getUInt16(bootSector, 22);
-    uint32_t rootDirSectors = ((rootEntries * 32) + (bytesPerSector - 1)) / bytesPerSector;
+    
 
     uint32_t rootStart = reservedSectors + (numFATs * sectorsPerFAT);
 
