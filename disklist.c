@@ -30,7 +30,7 @@ void readDirectory(FILE *disk, uint32_t dirStart, uint16_t bytesPerSector, const
     printf("%s\n", dirName);
     printf("==================\n");
 
-    uint8_t dirEntries[224 * 32]; // Max entries in root directory (224 entries * 32 bytes each)
+    uint8_t dirEntries[512]; // Max entries in root directory (224 entries * 32 bytes each)
     fseek(disk, dirStart * bytesPerSector, SEEK_SET);
     fread(dirEntries, sizeof(dirEntries), 1, disk);
 
@@ -84,8 +84,8 @@ void readDirectory(FILE *disk, uint32_t dirStart, uint16_t bytesPerSector, const
         uint8_t attributes = dirEntries[i + 11];
         uint16_t firstCluster = getUInt16(dirEntries, i + 26);
 
-        if (attributes & 0x10 && firstCluster >= 2) { // Directory and valid cluster
-            char subDirName[256];
+        if (attributes & 0x10 && firstCluster >= 2 && name[0] != '.') { // Directory and valid cluster
+            char subDirName[20];
             snprintf(subDirName, sizeof(subDirName), "%s/%s", dirName, name);
 
             uint32_t subDirStart = 33 + (firstCluster - 2) * sectorsPerCluster;
